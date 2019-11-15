@@ -30,6 +30,17 @@ class Posts {
     }
   }
 
+  static async getComments(p_id) {
+    try {
+      const response = await db.any(
+        `select * from comments where post_id = ${p_id}`
+      );
+      return response;
+    } catch (err) {
+      return err.message;
+    }
+  }
+
   static async removeEntry(p_id) {
     try {
       const response = await db.result(`delete from posts where id = ${p_id}`);
@@ -52,6 +63,17 @@ class Posts {
 
   static async updateEntry(id, column, content) {
     const query = `UPDATE posts SET ${column} = ${content} WHERE id = '${id}'`;
+    try {
+      const response = await db.result(query);
+      return response;
+    } catch (err) {
+      return err.message;
+    }
+  }
+
+  static async addComment(post_id, username, comment) {
+    const query = `INSERT INTO comments (post_id, username, comment) VALUES (${post_id}, '${username}', '${comment}')`;
+
     try {
       const response = await db.result(query);
       return response;

@@ -20,6 +20,17 @@ router.post("/post/add", async (req, res) => {
   }
 });
 
+router.post("/post/add/comment", async (req, res) => {
+  const { post_id, username, comment } = req.body;
+  const response = await PostModel.addComment(post_id, username, comment);
+
+  if (response.command === "INSERT" && response.rowCount === 1) {
+    res.sendStatus(200);
+  } else {
+    res.send(`Could not add comment`).status(409);
+  }
+});
+
 // Read All
 router.get("/all", async (req, res) => {
   const allPosts = await PostModel.getAll();
@@ -43,6 +54,12 @@ router.put("/post/update/:post_id?", async (req, res) => {
   } else {
     res.send(`Could not update Post ID ${postId}`).status(409);
   }
+});
+
+router.get("/post/comments/:post_id?", async (req, res) => {
+  const postId = req.params.post_id;
+  const thePost = await PostModel.getComments(postId);
+  res.json(thePost).status(200);
 });
 
 // Delete
