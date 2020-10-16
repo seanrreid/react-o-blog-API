@@ -15,6 +15,7 @@ class Posts {
   static async getAll() {
     try {
       const response = await db.any(`select * from posts;`);
+      console.log("response is", response);
       return response;
     } catch (err) {
       return err.message;
